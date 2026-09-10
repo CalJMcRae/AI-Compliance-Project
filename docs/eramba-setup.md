@@ -75,5 +75,19 @@ docker compose -f docker-compose.simple-install.yml down -v   # -v also drops th
 
 ## Setup log
 
-`TODO` record: date stood up, Eramba version, any System Health warnings, activation token
-obtained (y/n).
+- **2026-09-10** Instance stood up via `docker-compose.simple-install.yml`. Admin account
+  created, activation token obtained.
+- **System Health, MySQL checks failed** ("MySQL Allowed" and "MySQL InnoDB"). Root cause:
+  Docker Desktop on Windows bind-mounts `mysql/conf.d/custom.cnf` as world-writable, so
+  MySQL 8.4 ignores it (`World-writable config file ... is ignored` in the log) and runs on
+  defaults.
+- **Fix:** rather than fight the Windows bind-mount permissions, the required settings were
+  passed as `mysqld` startup arguments in the `mysql` service `command:` in the compose
+  file: `--max-allowed-packet=512M`, `--innodb-buffer-pool-size=1G`,
+  `--innodb-lock-wait-timeout=200`, `--innodb-strict-mode=0`,
+  `--sql-mode=NO_ENGINE_SUBSTITUTION`. `docker compose up -d` recreated only the mysql
+  container; the `db-data` volume persisted, so no re-initialisation. Both checks green
+  after refresh.
+- Alternative fix if this recurs: move the `eramba-docker` folder into the WSL2 native
+  filesystem (inside the Linux distro, not `/mnt/c/...`), where Linux file modes apply and
+  `custom.cnf` loads normally.
