@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
+*.xlsx binary
+
+# keep CSV data out of GitHub language stats
+*.csv linguist-detectable=false

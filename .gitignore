@@ -1,0 +1,27 @@
+# secrets / credentials
+*.pem
+*.ppk
+credentials
+*credentials*
+.env
+.aws/
+
+# python / ml scratch
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+model.tar.gz
+*.joblib
+data/*.csv.raw
+
+# eramba local (only curated exports are committed)
+eramba-docker/
+docker-data/
+
+# os / editor / tooling
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
+~$*
