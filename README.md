@@ -6,8 +6,9 @@ platform (Eramba Community). The system is assessed against the **EU AI Act (202
 
 **Author:** Callum McRae &nbsp;|&nbsp; **Scenario:** Meridian Health Analytics (simulated)
 
-> **Status:** Step 0 (project setup). Next: define the AI system, then classify it under the
-> EU AI Act.
+> **Status:** EU AI Act classification drafted (treated as high-risk; see
+> [`02-eu-ai-act-classification/`](02-eu-ai-act-classification/)). Next: finish the system
+> description, stand up Eramba, and build the minimal AWS model.
 
 ---
 
