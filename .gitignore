@@ -25,3 +25,6 @@ Thumbs.db
 .idea/
 .claude/
 ~$*
+
+# Windows folder customization (created by OneDrive/Explorer, not project content)
+desktop.ini
