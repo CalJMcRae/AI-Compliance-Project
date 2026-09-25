@@ -30,7 +30,7 @@ starting a disconnected narrative.
 
 ---
 
-## Section 1 — System definition (`01-ai-system-definition/`)
+## Section 1: System definition (`01-ai-system-definition/`)
 
 **What it is.** The technical documentation of MRRS: what it does, who uses it, what data
 goes in, what comes out, and a set of governance decisions that had to be made before
@@ -59,7 +59,7 @@ before you can meaningfully assess anything else.
 
 ---
 
-## Section 2 — EU AI Act classification (`02-eu-ai-act-classification/`)
+## Section 2: EU AI Act classification (`02-eu-ai-act-classification/`)
 
 **What it is.** The single most important judgement call in the project: is MRRS high-risk
 under the EU AI Act, and why.
@@ -98,7 +98,7 @@ has already moved once.
 
 ---
 
-## Section 3 — Control catalogue (`03-control-catalogue/`)
+## Section 3: Control catalogue (`03-control-catalogue/`)
 
 **What it is.** 18 specific obligations the classification in Section 2 creates, turned into
 a checklist with an owner and a status each: 12 from the EU AI Act itself (risk management,
@@ -115,7 +115,7 @@ underlying risk-management discipline (their MEASURE function in particular).
 
 ---
 
-## Section 4 — AI risk register (`04-ai-risk-register/`)
+## Section 4: AI risk register (`04-ai-risk-register/`)
 
 **What it is.** Ten specific things that could go wrong, each scored for likelihood and
 impact (1 to 5 each), the same scoring convention used across the whole GRC portfolio, so
@@ -141,7 +141,7 @@ manage continuously, not something you fix once and close.
 
 ---
 
-## Section 5 — Assessment and gaps (`05-assessment-and-gaps/`)
+## Section 5: Assessment and gaps (`05-assessment-and-gaps/`)
 
 **What it is.** A snapshot of where all 18 controls actually stand, mirrored from the live
 Eramba instance: zero fully compliant (expected, the system is pre-production), seven
@@ -155,7 +155,7 @@ it is mostly the latter, honestly reported.
 
 ---
 
-## Section 6 — Treatment plan (`06-treatment-plan/`)
+## Section 6: Treatment plan (`06-treatment-plan/`)
 
 **What it is.** The 18 open control gaps, consolidated into 11 concrete pieces of work
 (several controls close under one fix, the same "don't list 18 disconnected line items"
@@ -169,7 +169,7 @@ actually reacting to new evidence, not just a document written once and left alo
 
 ---
 
-## Section 7 — The AWS model build (`07-aws-model/`)
+## Section 7: The AWS model build (`07-aws-model/`)
 
 **What it is, and why it matters most.** A real, working, minimal version of MRRS: a
 synthetic dataset, a real SageMaker training job, a real deployed endpoint, real predictions
