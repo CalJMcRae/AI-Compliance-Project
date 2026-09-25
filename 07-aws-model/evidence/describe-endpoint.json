@@ -1,0 +1,24 @@
+{
+    "EndpointName": "meridian-ai-risk-endpoint",
+    "EndpointArn": "arn:aws:sagemaker:us-west-1:328064416121:endpoint/meridian-ai-risk-endpoint",
+    "EndpointConfigName": "meridian-ai-risk-endpoint-config",
+    "ProductionVariants": [
+        {
+            "VariantName": "primary",
+            "DeployedImages": [
+                {
+                    "SpecifiedImage": "746614075791.dkr.ecr.us-west-1.amazonaws.com/sagemaker-xgboost:1.5-1",
+                    "ResolvedImage": "746614075791.dkr.ecr.us-west-1.amazonaws.com/sagemaker-xgboost@sha256:c764382b16cd0c921f1b2e66de8684fb999ccbd0c042c95679f0b69bc9cdd12c",
+                    "ResolutionTime": "2026-09-25T09:52:23.938000-06:00"
+                }
+            ],
+            "CurrentWeight": 1.0,
+            "DesiredWeight": 1.0,
+            "CurrentInstanceCount": 1,
+            "DesiredInstanceCount": 1
+        }
+    ],
+    "EndpointStatus": "InService",
+    "CreationTime": "2026-09-25T09:52:23.562000-06:00",
+    "LastModifiedTime": "2026-09-25T09:55:17.491000-06:00"
+}

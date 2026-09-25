@@ -1,0 +1,236 @@
+{
+    "TrainingJobName": "meridian-ai-xgb-20260925-094813",
+    "TrainingJobArn": "arn:aws:sagemaker:us-west-1:328064416121:training-job/meridian-ai-xgb-20260925-094813",
+    "ModelArtifacts": {
+        "S3ModelArtifacts": "s3://meridian-ai-data-328064416121/output/meridian-ai-xgb-20260925-094813/output/model.tar.gz"
+    },
+    "TrainingJobStatus": "Completed",
+    "SecondaryStatus": "Completed",
+    "HyperParameters": {
+        "eta": "0.2",
+        "eval_metric": "auc",
+        "max_depth": "5",
+        "num_round": "150",
+        "objective": "binary:logistic",
+        "subsample": "0.8",
+        "verbosity": "1"
+    },
+    "AlgorithmSpecification": {
+        "TrainingImage": "746614075791.dkr.ecr.us-west-1.amazonaws.com/sagemaker-xgboost:1.5-1",
+        "TrainingInputMode": "File",
+        "MetricDefinitions": [
+            {
+                "Name": "train:mae",
+                "Regex": ".*\\[[0-9]+\\].*#011train-mae:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:aucpr",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-aucpr:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:f1_binary",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-f1_binary:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:mae",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-mae:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:logloss",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-logloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:f1",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-f1:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:accuracy",
+                "Regex": ".*\\[[0-9]+\\].*#011train-accuracy:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:mse",
+                "Regex": ".*\\[[0-9]+\\].*#011train-mse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:recall",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-recall:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:poisson-nloglik",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-poisson-nloglik:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:precision",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-precision:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:error",
+                "Regex": ".*\\[[0-9]+\\].*#011train-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:ndcg",
+                "Regex": ".*\\[[0-9]+\\].*#011train-ndcg:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:map",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-map:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:f1_binary",
+                "Regex": ".*\\[[0-9]+\\].*#011train-f1_binary:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:auc",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-auc:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:auc",
+                "Regex": ".*\\[[0-9]+\\].*#011train-auc:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:error",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:poisson-nloglik",
+                "Regex": ".*\\[[0-9]+\\].*#011train-poisson-nloglik:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:rmse",
+                "Regex": ".*\\[[0-9]+\\].*#011train-rmse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:logloss",
+                "Regex": ".*\\[[0-9]+\\].*#011train-logloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:accuracy",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-accuracy:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:aucpr",
+                "Regex": ".*\\[[0-9]+\\].*#011train-aucpr:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:balanced_accuracy",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-balanced_accuracy:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:rmse",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-rmse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:mse",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-mse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:ndcg",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-ndcg:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:f1",
+                "Regex": ".*\\[[0-9]+\\].*#011train-f1:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:map",
+                "Regex": ".*\\[[0-9]+\\].*#011train-map:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            }
+        ],
+        "EnableSageMakerMetricsTimeSeries": false
+    },
+    "RoleArn": "arn:aws:iam::328064416121:role/meridian-ai-sagemaker-role",
+    "InputDataConfig": [
+        {
+            "ChannelName": "train",
+            "DataSource": {
+                "S3DataSource": {
+                    "S3DataType": "S3Prefix",
+                    "S3Uri": "s3://meridian-ai-data-328064416121/train/",
+                    "S3DataDistributionType": "FullyReplicated"
+                }
+            },
+            "ContentType": "text/csv",
+            "CompressionType": "None",
+            "RecordWrapperType": "None"
+        },
+        {
+            "ChannelName": "validation",
+            "DataSource": {
+                "S3DataSource": {
+                    "S3DataType": "S3Prefix",
+                    "S3Uri": "s3://meridian-ai-data-328064416121/validation/",
+                    "S3DataDistributionType": "FullyReplicated"
+                }
+            },
+            "ContentType": "text/csv",
+            "CompressionType": "None",
+            "RecordWrapperType": "None"
+        }
+    ],
+    "OutputDataConfig": {
+        "KmsKeyId": "febe85f3-860f-453c-bd0f-1cc21e600c06",
+        "S3OutputPath": "s3://meridian-ai-data-328064416121/output/"
+    },
+    "ResourceConfig": {
+        "InstanceType": "ml.m5.large",
+        "InstanceCount": 1,
+        "VolumeSizeInGB": 5,
+        "VolumeKmsKeyId": "febe85f3-860f-453c-bd0f-1cc21e600c06"
+    },
+    "StoppingCondition": {
+        "MaxRuntimeInSeconds": 1800
+    },
+    "CreationTime": "2026-09-25T09:48:14.008000-06:00",
+    "TrainingStartTime": "2026-09-25T09:48:54.301000-06:00",
+    "TrainingEndTime": "2026-09-25T09:50:58.372000-06:00",
+    "LastModifiedTime": "2026-09-25T09:50:58.953000-06:00",
+    "SecondaryStatusTransitions": [
+        {
+            "Status": "Starting",
+            "StartTime": "2026-09-25T09:48:14.008000-06:00",
+            "EndTime": "2026-09-25T09:48:54.301000-06:00",
+            "StatusMessage": "Preparing the instances for training"
+        },
+        {
+            "Status": "Downloading",
+            "StartTime": "2026-09-25T09:48:54.301000-06:00",
+            "EndTime": "2026-09-25T09:50:35.367000-06:00",
+            "StatusMessage": "Downloading the training image"
+        },
+        {
+            "Status": "Training",
+            "StartTime": "2026-09-25T09:50:35.367000-06:00",
+            "EndTime": "2026-09-25T09:50:45.703000-06:00",
+            "StatusMessage": "Training image download completed. Training in progress."
+        },
+        {
+            "Status": "Uploading",
+            "StartTime": "2026-09-25T09:50:45.703000-06:00",
+            "EndTime": "2026-09-25T09:50:58.372000-06:00",
+            "StatusMessage": "Uploading generated training model"
+        },
+        {
+            "Status": "Completed",
+            "StartTime": "2026-09-25T09:50:58.372000-06:00",
+            "EndTime": "2026-09-25T09:50:58.372000-06:00",
+            "StatusMessage": "Training job completed"
+        }
+    ],
+    "FinalMetricDataList": [
+        {
+            "MetricName": "validation:auc",
+            "Value": 0.7198200225830078,
+            "Timestamp": "2026-09-25T09:50:40-06:00"
+        },
+        {
+            "MetricName": "train:auc",
+            "Value": 0.9999899864196777,
+            "Timestamp": "2026-09-25T09:50:40-06:00"
+        }
+    ],
+    "EnableNetworkIsolation": false,
+    "EnableInterContainerTrafficEncryption": false,
+    "EnableManagedSpotTraining": false,
+    "TrainingTimeInSeconds": 124,
+    "BillableTimeInSeconds": 124
+}

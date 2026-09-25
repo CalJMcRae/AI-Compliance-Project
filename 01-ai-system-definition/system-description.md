@@ -1,8 +1,9 @@
 # AI System Description: Meridian Rising Risk Score
 
 Written to double as the basis for the EU AI Act technical documentation (Annex IV) and the
-NIST AI RMF **Map** function. `TODO` marks a decision or a value to complete, several of them
-after the model is built in [`../07-aws-model/`](../07-aws-model/).
+NIST AI RMF **Map** function. All decisions and build-dependent values are now resolved,
+the proof-of-concept model in [`../07-aws-model/`](../07-aws-model/) has been built, evaluated
+and torn down.
 
 ---
 
@@ -64,7 +65,10 @@ no direct identifiers.
 ## 5. Outputs
 
 - `risk_score` (integer 0 to 100)
-- `risk_tier` (low / moderate / high), thresholds `TODO` set at calibration during the build
+- `risk_tier` (low / moderate / high), thresholds set from the build's calibration deciles
+  ([`../07-aws-model/evidence/calibration-deciles.csv`](../07-aws-model/evidence/calibration-deciles.csv)):
+  **low** 0-24, **moderate** 25-54, **high** 55-100 (score = predicted probability x 100).
+  Provisional, to be revisited once real (non-synthetic) data is available.
 - `top_features` (the 3 to 5 features that contributed most, for clinician context)
 - Delivery: dashboard ranked list, refreshed **nightly** (batch job)
 
@@ -72,9 +76,27 @@ no direct identifiers.
 
 - Approach: supervised binary classification (event in next 90 days: yes / no), gradient
   boosted trees (SageMaker built-in XGBoost).
-- Training / validation / test split: `TODO` set during the build (time-based split intended)
-- Performance: `TODO` after build. Record AUROC, AUPRC, calibration, and **subgroup
-  performance** across age, sex and the held-out sensitive attributes.
+- Training / validation / test split: 1,600 / 400 / 400 rows (66.7% / 16.7% / 16.7%). The
+  build used a **random** split, not the time-based split originally intended, recorded as a
+  limitation (s13); a time-based split is required before any production use, to catch
+  drift a random split cannot.
+- Performance (full detail and raw evidence in
+  [`../07-aws-model/model-notes.md`](../07-aws-model/model-notes.md) and
+  [`../07-aws-model/evidence/`](../07-aws-model/evidence/)):
+  - Training: `train:auc = 0.9999...`, `validation:auc = 0.7198`, a wide gap indicating
+    overfitting.
+  - Held-out test set (scored via the live endpoint, independent of the training metric):
+    **AUROC 0.7486, AUPRC 0.5527** (prevalence baseline 0.2975).
+  - Calibration: under-confident in the bottom half of the score range, somewhat
+    over-confident at the very top. Ranking is reasonable; absolute probability calibration
+    is not production grade.
+  - **Subgroup performance (AR-01 / RMF-MS-2):** using a held-out disadvantage variable never
+    given to the model, ranking (AUC) and recall at a fixed threshold are balanced across the
+    subgroup, but the model **understates absolute risk for the disadvantaged group by
+    roughly nine times the gap seen elsewhere** (14.8 points vs 1.6 points). Because the risk
+    tier is set from the absolute score, this group is measurably more likely to land in a
+    lower tier than their true risk warrants. This is now a measured finding, not a
+    hypothetical risk.
 - Retraining cadence: **scheduled every 6 months**, plus an **out-of-cycle retrain** if
   monitored AUROC falls below, or subgroup disparity rises above, a threshold set at
   calibration. Feeds Art. 72 post-market monitoring (AIA-09).
@@ -97,9 +119,12 @@ Design measures for effective oversight (Art. 14) and against automation bias:
 ## 8. Deployment architecture
 
 See [`data-flow-diagram.md`](data-flow-diagram.md). Summary: nightly de-identified extract
-lands in an S3 bucket (KMS encrypted) -> a scoring job calls the SageMaker Serverless
-Inference endpoint -> scores written back to the dashboard datastore -> surfaced to
-clinicians. All components tagged `project=meridian-ai`.
+lands in an S3 bucket (KMS encrypted) -> a scoring job calls a SageMaker inference endpoint
+-> scores written back to the dashboard datastore -> surfaced to clinicians. All components
+tagged `project=meridian-ai`. Target production architecture is Serverless Inference
+(scales to zero); the proof-of-concept build in
+[`../07-aws-model/`](../07-aws-model/) used a small real-time endpoint instead, purely
+because the local AWS CLI predated Serverless Inference support, not an architecture change.
 
 ## 9. Data governance
 
@@ -130,10 +155,12 @@ clinicians. All components tagged `project=meridian-ai`.
 
 ## 11. Third-party and foundation components
 
-- SageMaker built-in XGBoost algorithm container (AWS-provided).
-- `TODO` complete from the build: exact `xgboost`, `scikit-learn`, `pandas`, `numpy`
-  versions and their licences. No pretrained weights are used. An inventory is maintained as
-  part of the QMS (AIA-08) and supply-chain risk (AR-09).
+- SageMaker built-in XGBoost algorithm container (AWS-provided), image
+  `746614075791.dkr.ecr.us-west-1.amazonaws.com/sagemaker-xgboost:1.5-1` (XGBoost 1.5.x
+  internally). No custom training script and no pretrained weights are used, the container
+  itself is the only third-party component in the training and inference path.
+  Licence: Apache 2.0 (XGBoost); the container image itself is AWS-provided and maintained.
+  An inventory is maintained as part of the QMS (AIA-08) and supply-chain risk (AR-09).
 
 ## 12. Logging and record-keeping
 
@@ -151,5 +178,16 @@ clinicians. All components tagged `project=meridian-ai`.
 - Valid only for an adult primary-care panel resembling the training population (s9).
 - Sensitive attributes are deliberately excluded as inputs, so the model cannot correct for
   a disparity it cannot see; the quarterly subgroup review is the compensating control.
-- `TODO` add limitations found during the build (feature gaps, calibration drift, subgroup
-  gaps).
+- **The build confirmed this is not merely theoretical:** the model measurably understates
+  absolute risk for a disadvantaged subgroup by roughly nine times the gap seen elsewhere,
+  even though its ranking and recall-at-threshold are balanced across groups (see s6, and
+  [`../07-aws-model/model-notes.md`](../07-aws-model/model-notes.md)). Do not treat balanced
+  AUC or recall alone as evidence of fairness; check absolute score calibration by subgroup.
+- **The model overfits** (train AUC ~1.0 vs test AUC 0.75) and is **not well calibrated** in
+  absolute probability terms, under-confident for lower-risk patients, somewhat
+  over-confident for the highest-risk decile. Both require remediation (regularisation,
+  more data, and a calibration step such as Platt scaling or isotonic regression) before
+  production use.
+- The build used a **random** train/validation/test split rather than the time-based split
+  intended for a system that will see genuine temporal drift; a time-based split is required
+  before production use.

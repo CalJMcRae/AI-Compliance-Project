@@ -1,6 +1,6 @@
 # AI Compliance Assessment: Meridian Rising Risk Score
 
-**Assessor:** Callum McRae (GRC) &nbsp;|&nbsp; **Date:** 2026-09-11 &nbsp;|&nbsp; **System:** Meridian Rising Risk Score v0.1
+**Assessor:** Callum McRae (GRC) &nbsp;|&nbsp; **Date:** 2026-09-25 &nbsp;|&nbsp; **System:** Meridian Rising Risk Score v0.1
 
 The headline report, written for a non-technical executive audience. The detail behind each
 section is in the numbered folders and in Eramba.
@@ -13,11 +13,16 @@ proactive outreach. It is assessed here as a **high-risk AI system under the EU 
 and separately against the **NIST AI RMF**, with an optional ISO/IEC 42001 overlay planned
 once the primary frameworks are substantially met.
 
-The system is pre-production. Of the 18 controls in scope, none are yet fully implemented,
-3 are partially underway (documentation, human-oversight design, and system context are
-drafted but not formally reviewed), and 15 have not started. Nine AI-specific risks have
-been identified and scored, two Critical (model unfairness to an under-served subgroup, and
-clinician over-reliance on the tool's output). **Recommendation: do not deploy MRRS to a
+The system is pre-production. A minimal real version was built on AWS (SageMaker) to test
+this assessment against actual technical evidence rather than design intent alone, trained,
+evaluated, and torn down. That build **confirmed, rather than merely projected, one of the
+Critical risks**: the model measurably understates risk for a disadvantaged patient subgroup,
+and separately surfaced a new finding (model overfitting and poor calibration) that was not
+apparent before real evaluation. Of the 18 controls in scope, none are yet fully implemented,
+7 are partially underway (3 by design or documentation, 4 because a real evaluation has run
+and found gaps still to fix), and 11 have not started. Ten AI-specific risks have been
+identified and scored, two Critical (confirmed model unfairness to an under-served subgroup,
+and clinician over-reliance on the tool's output). **Recommendation: do not deploy MRRS to a
 real clinic yet.** A phased treatment plan exists to close the gaps; the two Critical risks
 and the outstanding medical-device qualification question should be resolved before any
 production decision is revisited.
@@ -55,40 +60,47 @@ control set ahead of the deadline rather than wait.
 18 controls are in scope: 12 from the EU AI Act (Arts. 9-17, 26, 43, 47, 49, 72), 5 from the
 NIST AI RMF (Govern, Map, Measure x2, Manage), and 1 ISO/IEC 42001 overlay check. All 18 are
 built and tracked live in **Eramba** (Control Catalogue, linked to the AI risk register and
-to compliance packages for each framework). Current state: **0 compliant, 3 partially
-implemented, 15 not started, 0 not applicable.** The partially-implemented three
-(AIA-03 Technical documentation, AIA-06 Human oversight, RMF-MP-1 Context and
-categorisation) have a design or documentation artefact in place that has not yet been
-formally reviewed. Full detail in
-[`03-control-catalogue/control-catalogue.csv`](03-control-catalogue/control-catalogue.csv)
+to compliance packages for each framework). Current state: **0 compliant, 7 partially
+implemented, 11 not started, 0 not applicable.** Three of the partial controls (AIA-03
+Technical documentation, AIA-06 Human oversight, RMF-MP-1 Context and categorisation) have a
+design or documentation artefact in place that has not yet been formally reviewed. The other
+four moved to Partial only after the AWS proof-of-concept build produced real evidence:
+**AIA-02 / RMF-MS-2** (Data governance, Bias assessment) ran a genuine subgroup fairness
+check and found a real disparity; **AIA-07 / RMF-MS-1** (Accuracy/robustness, Performance
+metrics) captured real AUROC/AUPRC/calibration numbers and found the model overfits. Full
+detail in [`03-control-catalogue/control-catalogue.csv`](03-control-catalogue/control-catalogue.csv)
 and [`05-assessment-and-gaps/assessment.md`](05-assessment-and-gaps/assessment.md).
 
 ## 5. AI risk register
 
-Nine AI-specific risks were identified and scored (Likelihood x Impact, 1-5 each):
+Ten AI-specific risks have been identified and scored (Likelihood x Impact, 1-5 each), nine
+from the design-stage assessment plus one (AR-10) added after the AWS build surfaced it:
 
 | Risk | Band | Summary |
 |---|---|---|
-| AR-01 | **Critical (16)** | Model systematically under-scores an under-served subgroup, reducing their proactive outreach |
+| AR-01 | **Critical (16)** | Model systematically under-scores an under-served subgroup, reducing their proactive outreach. **Confirmed by the build:** absolute risk understated by roughly 9x the gap seen elsewhere for this subgroup, despite balanced ranking and recall. |
 | AR-03 | **Critical (16)** | Automation bias: clinicians defer to the ranked list, patients the model does not flag get neglected |
+| AR-10 | High (15) | **New finding from the build:** the model overfits (train AUC ~1.0 vs test AUC 0.75) and is poorly calibrated, degrading score reliability for every patient, not just a subgroup |
 | AR-02, AR-05, AR-06, AR-08 | High (12) | Unreliable scores from stale data; undetected model drift; exposure of patient feature data or scores; an override path that is not validated under real workload |
-| AR-04, AR-07, AR-09 | Medium (6-9) | Insufficient explainability to sense-check a score; patients not yet told an AI system informs their care; an uninventoried third-party model component |
+| AR-04, AR-07, AR-09 | Medium (6-9) | Insufficient explainability to sense-check a score; patients not yet told an AI system influences their care; a now-identified third-party model component pending formal licence review |
 
 Every risk carries a residual target set in Eramba's Treatment tab, none go to Low; a
 fairness or oversight risk in a clinical ML system is never treated as fully eliminated.
 Full register: [`04-ai-risk-register/ai-risk-register.csv`](04-ai-risk-register/ai-risk-register.csv).
+Full evidence behind AR-01 and AR-10: [`07-aws-model/model-notes.md`](07-aws-model/model-notes.md).
 
 ## 6. Treatment plan
 
 The 18 control gaps are grouped into **11 remediation actions**, several controls close
 together under one fix, phased 0-30 / 30-90 / 90+ days:
 
-- **0-30 days:** formalise the risk-management process (G-01); finalise technical
-  documentation and context review (G-03); deploy the patient notice and deployer
+- **0-30 days:** formalise the risk-management process (G-01); mitigate the now-confirmed
+  subgroup disparity (G-02, priority raised from 30-90 days once the build confirmed it);
+  formally sign off technical documentation (G-03); deploy the patient notice and deployer
   instructions (G-05).
-- **30-90 days:** bias and data-quality validation (G-02); logging and post-market
-  monitoring (G-04); human-oversight validation with clinician users (G-06); performance,
-  robustness and security testing (G-07).
+- **30-90 days:** logging and post-market monitoring (G-04); human-oversight validation with
+  clinician users (G-06); fix the overfitting and calibration gap, plus robustness and
+  security testing (G-07).
 - **90+ days:** quality management system (G-08); MDR qualification and conformity
   assessment (G-09); registration and declaration of conformity (G-10, blocked on G-09);
   the ISO/IEC 42001 overlay (G-11, deferred by design).
@@ -98,10 +110,13 @@ Full plan with owners and residual risk:
 
 ## 7. Residual risk and recommendation
 
-**Do not proceed to production yet.** The two Critical risks (AR-01 fairness, AR-03
-automation bias) both trace to controls with no current implementation (G-01, G-02, G-05,
-G-06), and the medical-device qualification question (G-09) is unresolved, which leaves the
-correct conformity route undetermined. None of this blocks continued development.
+**Do not proceed to production yet.** The two Critical risks (AR-01 fairness, now confirmed
+by measurement rather than projected; AR-03 automation bias) both trace to controls with no
+current implementation (G-01, G-02, G-05, G-06), and the medical-device qualification
+question (G-09) is unresolved, which leaves the correct conformity route undetermined. A
+third risk, AR-10 (overfitting and calibration), was not on the original register and only
+surfaced once a real model was built and evaluated, itself a reason to keep building and
+testing before any wider claim of readiness. None of this blocks continued development.
 
 **Conditions for revisiting the production decision:**
 1. G-01, G-02, G-05 and G-06 implemented and their linked risks (AR-01, AR-03, AR-07, AR-08)
@@ -115,11 +130,20 @@ date, **2026-12-11**, at the production-gate milestone.
 
 ## 8. Limitations of this assessment
 
-- **All data is synthetic.** No real patients, clinics, or organisations.
-- **No live technical evidence yet.** The AWS model build ([`07-aws-model/`](07-aws-model/))
-  has not been executed, so the control assessment reflects design intent for the technical
-  controls (logging, accuracy metrics, security), not operating evidence. This is stated
-  plainly rather than assumed away.
+- **All data is synthetic**, including the held-out disadvantage variable used for the
+  subgroup fairness check. The *pattern* it revealed (balanced ranking, disparate absolute
+  calibration) is a real and general failure mode; the specific numbers are not evidence
+  about any real population.
+- **The AWS build was minimal and torn down**, one training run, one small evaluation
+  endpoint, 2,400 synthetic rows. It is real technical evidence, not a design assumption, but
+  it is a proof of concept, not a production-grade evaluation (no cross-validation, no
+  hyperparameter search, no adversarial testing yet, see gap G-07).
+- **Tooling limited two build choices**, documented as trade-offs rather than hidden: the
+  SageMaker execution role used the broad `AmazonSageMakerFullAccess` managed policy rather
+  than a hand-scoped one, and the endpoint was deployed as a small real-time instance rather
+  than Serverless Inference because the local AWS CLI predated serverless support. Neither
+  reflects the intended production architecture. Full detail:
+  [`07-aws-model/model-notes.md`](07-aws-model/model-notes.md).
 - **Single assessor.** The classification, risk scoring, and control assessment are all my
   own judgement; a real engagement would have a second reviewer, especially for the MDR
   question.

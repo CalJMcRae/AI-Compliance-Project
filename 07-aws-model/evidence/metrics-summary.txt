@@ -1,0 +1,26 @@
+Meridian Rising Risk Score - build evidence
+Training job: meridian-ai-xgb-20260925-094813 (SageMaker built-in XGBoost 1.5-1, ml.m5.large, 124s)
+Endpoint: meridian-ai-risk-endpoint (real-time, ml.t2.medium - see model-notes.md for why not serverless)
+
+TRAINING METRICS (from SageMaker, on the validation channel):
+  train:auc      = 0.99999 (near-perfect on training data)
+  validation:auc = 0.71982
+  => gap indicates overfitting (num_round=150, max_depth=5 on 1,600 rows)
+
+TEST SET METRICS (400 held-out rows, scored via the live endpoint):
+  AUROC = 0.7486
+  AUPRC = 0.5527 (baseline/prevalence = 0.2975)
+
+CALIBRATION (decile: mean predicted vs actual event rate):
+  Deciles 1-4 (lowest risk): systematically under-confident (e.g. predicted 0.034 vs actual 0.250 in decile 4)
+  Deciles 9-10 (highest risk): somewhat over-confident (predicted 0.879 vs actual 0.750 in decile 10)
+  Full decile table in the classification.md excerpt / system-description.md build log.
+
+SUBGROUP FAIRNESS CHECK (AR-01 / RMF-MS-2):
+  Held-out 'disadvantage' variable used only for this check, never a model input.
+  disadv=0 (n=289): mean predicted risk 0.2329, actual event rate 0.2491 (gap 1.6 pts), AUC 0.7335, recall@0.30 = 0.514
+  disadv=1 (n=111): mean predicted risk 0.2754, actual event rate 0.4234 (gap 14.8 pts), AUC 0.7753, recall@0.30 = 0.511
+  FINDING: ranking (AUC) and recall at a fixed threshold are balanced across groups, but the model
+  systematically understates absolute risk for the disadvantaged group by ~9x the gap seen elsewhere.
+  Since risk TIER is set from the absolute score, this subgroup is more likely to land in a lower tier
+  than their true risk warrants - a concrete, measured instance of the AR-01 concern.

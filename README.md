@@ -6,12 +6,13 @@ platform (Eramba Community). The system is assessed against the **EU AI Act (202
 
 **Author:** Callum McRae &nbsp;|&nbsp; **Scenario:** Meridian Health Analytics (simulated)
 
-> **Status:** Classification, risk register (9 risks), control catalogue (18 controls), and
-> gap analysis complete, built and tracked live in Eramba, with a phased treatment plan
-> (11 remediation actions). See [`ai-compliance-assessment.md`](ai-compliance-assessment.md)
-> for the full report. **Not yet done:** the minimal real AWS model
-> ([`07-aws-model/`](07-aws-model/)), so the technical controls are assessed on design
-> intent, not live evidence. Recommendation: do not deploy to production yet.
+> **Status: complete.** Classification, risk register (10 risks), control catalogue
+> (18 controls), gap analysis and a phased treatment plan (11 remediation actions) are built
+> and tracked live in Eramba. The minimal real AWS model
+> ([`07-aws-model/`](07-aws-model/)) has been built, evaluated and torn down, and its
+> evidence **confirmed** one of the Critical risks and surfaced a new one (model overfitting
+> and poor calibration). See [`ai-compliance-assessment.md`](ai-compliance-assessment.md) for
+> the full report. **Recommendation: do not deploy to production yet.**
 
 ---
 
